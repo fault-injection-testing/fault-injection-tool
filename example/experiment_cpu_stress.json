@@ -1,0 +1,42 @@
+{
+    "title": "Example of fault injector",
+    "description": "n/a",
+    "configuration": {
+        "hostname": {
+            "type": "env",
+            "key": "ATTACK_TARGET"
+        },
+        "username": {
+            "type": "env",
+            "key": "SSH_USER"
+        },
+        "key_filename": {
+            "type": "env",
+            "key": "SSH_KEY_PATH"
+        }
+    },
+    "steady-state-hypothesis": {
+        "title": "n/a",
+        "probes": []
+    },
+    "method": [
+        {
+            "type": "action",
+            "name": "stress cpu",
+            "provider": {
+                "type": "python",
+                "module": "action",
+                "func": "inject_cpu_stress",
+                "arguments": {
+                    "percent": 50,
+                    "length": 600,
+                    "target": {
+                        "hostname": "${hostname}",
+                        "username": "${username}",
+                        "key_filename": "${key_filename}"
+                    }
+                }
+            }
+        }
+    ]
+}

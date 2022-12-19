@@ -1,0 +1,7 @@
+beartype
+cerberus
+paramiko
+pytest
+pytest-cov
+pytest-mock
+typing-extensions

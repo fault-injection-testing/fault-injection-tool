@@ -1,0 +1,89 @@
+{
+    "title": "Example of fault injector",
+    "description": "n/a",
+    "configuration": {
+        "hostname": {
+            "type": "env",
+            "key": "ATTACK_TARGET"
+        },
+        "username": {
+            "type": "env",
+            "key": "SSH_USER"
+        },
+        "key_filename": {
+            "type": "env",
+            "key": "SSH_KEY_PATH"
+        }
+    },
+    "steady-state-hypothesis": {
+        "title": "n/a",
+        "probes": []
+    },
+    "method": [
+        {
+            "type": "action",
+            "name": "inject network latency",
+            "provider": {
+                "type": "python",
+                "module": "action",
+                "func": "inject_traffic_control",
+                "arguments": {
+                    "params": {
+                        "tc": [
+                            {
+                                "destination_ip_addresses": [
+                                    "8.8.8.8"
+                                ],
+                                "destination_ports": [
+                                    "80",
+                                    "22"
+                                ],
+                                "latency": 100
+                            }
+                        ]
+                    },
+                    "target": {
+                        "hostname": "${hostname}",
+                        "username": "${username}",
+                        "key_filename": "${key_filename}"
+                    }
+                }
+            },
+            "pauses": {
+                "after": 60
+            }
+        }
+    ],
+    "rollbacks": [
+        {
+            "type": "action",
+            "name": "rollback network latency",
+            "provider": {
+                "type": "python",
+                "module": "action",
+                "func": "rollback_traffic_control",
+                "arguments": {
+                    "params": {
+                        "tc": [
+                            {
+                                "destination_ip_addresses": [
+                                    "8.8.8.8"
+                                ],
+                                "destination_ports": [
+                                    "80",
+                                    "22"
+                                ],
+                                "latency": 100
+                            }
+                        ]
+                    },
+                    "target": {
+                        "hostname": "${hostname}",
+                        "username": "${username}",
+                        "key_filename": "${key_filename}"
+                    }
+                }
+            }
+        }
+    ]
+}
